@@ -1,0 +1,58 @@
+<html lang="zh-Hant-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="./manifest.json" rel="manifest">
+    <script src="./service-worker.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家裡用電度數一覽</title>
+    <link rel="icon" href="https://sherryyuechiu.github.io/personal/ElectricityUsageTrack/logo.png">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./showdown.min.js"></script>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+    <!--records-->
+    <script src="./record/2020_Q3Q4.js"></script>
+    <script src="./record/2021_Q1Q2.js"></script>
+    <!-- HTML Meta Tags -->
+    <meta name="description" content="家裡用電度數一覽">
+    <meta name="Author" content="玥餅" />
+    <link rev="made" href="mailto:sherryyue.c@protonmail.com" />
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="https://sherryyuechiu.github.io/personal/ElectricityUsageTrack/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="家裡用電度數一覽">
+    <meta property="og:description" content="家裡用電度數一覽">
+    <meta property="og:image" content="https://sherryyuechiu.github.io/personal/ElectricityUsageTrack/logo.png">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="sherryyuechiu.github.io">
+    <meta property="twitter:url" content="https://sherryyuechiu.github.io/personal/ElectricityUsageTrack/">
+    <meta name="twitter:title" content="家裡用電度數一覽">
+    <meta name="twitter:description" content="家裡用電度數一覽">
+    <meta name="twitter:image" content="https://sherryyuechiu.github.io/personal/ElectricityUsageTrack/logo.png">
+</head>
+
+<body>
+    <div>
+        <select id="chooseRecord"></select>
+    </div>
+    <section>
+        <h1>重點</h1>
+        <div id="clockDigit" class="summary"></div>
+        <div id="averageAll" class="summary"></div>
+    </section>
+    <section>
+        <h1>圖表</h1>
+        <div id='chart'></div>
+    </section>
+    <section>
+        <h1>詳細資料</h1>
+        <div id="tableSec"></div>
+    </section>
+    <script src="./app.js"></script>
+</body>
+
+</html>

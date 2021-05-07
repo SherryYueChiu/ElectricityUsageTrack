@@ -1,0 +1,52 @@
+section {
+  margin: 2em;
+}
+
+.summary {
+  display: inline-block;
+  max-height: 1.5em;
+  margin: 0.2em;
+  padding: 0.4em;
+  border-radius: 0.5em;
+  font-size: 1.5em;
+  overflow-x: auto;
+  background: black;
+  color: white;
+  white-space: nowrap;
+}
+
+#tableSec {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+table th {
+  padding: 0.3em;
+  border-bottom: 0.2em black solid;
+}
+
+table td {
+  padding: 0.3em;
+  border-bottom: 0.1em rgba(0, 0, 0, 0.13) solid;
+}
+
+#chooseRecord {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 10rem;
+  height: 3rem;
+  padding: .5rem;
+  margin: 2rem;
+  background: black;
+  color: aliceblue;
+  border-radius: .5em;
+  font-size: 1rem;
+  opacity: 0.5;
+  z-index: 3;
+  outline: none;
+}
+/*# sourceMappingURL=style.css.map */
