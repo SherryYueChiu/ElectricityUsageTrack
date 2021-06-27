@@ -1,4 +1,4 @@
-Ɠvar record = record ?? [];
+var record = record ?? [];
 record.push({
   name: `2021_Q1Q2`,
   startYear: 2020,
