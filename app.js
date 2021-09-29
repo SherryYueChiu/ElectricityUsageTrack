@@ -4,7 +4,15 @@ var $clockDigit = document.querySelector("#clockDigit");
 var $chooseRecord = document.querySelector("#chooseRecord");
 
 var chartLayout = {
-    title: '每日平均用電度數',
+    title: '用電追蹤',
+    yaxis: { title: '每日用量（度）' },
+    yaxis2: {
+        title: '電表讀數（度）',
+        titlefont: { color: 'rgb(255, 127, 14)' },
+        tickfont: { color: 'rgb(255, 127, 14)' },
+        overlaying: 'y',
+        side: 'right'
+    }
 };
 
 var dates, degrees, data, rangeCrossYear, crossYear, prevDate, chartData = [];
@@ -41,10 +49,10 @@ function md2arr(mdText) {
     return pattern;
 }
 
-//mmdd to yyyy-mm-dd
+// mmdd to yyyy-mm-dd
 function dateFormat(date, _crossYear) {
     _crossYear |= crossYear;
-    //cross year
+    // cross year
     if (prevDate && `${prevDate[0]}${prevDate[1]}` > `${date[0]}${date[1]}`) {
         _crossYear = true;
     }
@@ -55,29 +63,41 @@ function dateFormat(date, _crossYear) {
 }
 
 function init() {
-    chartData = [{
+    chartData = {
         x: [],
         y: [],
-        mode: 'lines+markers',
-        line: { color: '#7F7F7F' }
-    }];
-    dates = chartData[0].x;
-    degrees = chartData[0].y;
+        type: 'bar',
+        name: '每日用量（度）'
+    };
+    chartData2 = {
+        x: [],
+        y: [],
+        yaxis: 'y2',
+        type: 'scatter',
+        name: '電表讀數（度）'
+    };
+    dates = chartData.x;
+    degreeDelta = chartData.y;
+    dates2 = chartData2.x;
+    degrees = chartData2.y;
     data = md2arr(record[chosen].rawData);
     year = record[chosen].startYear;
     crossYear = false;
     rangeCrossYear = false;
-    //fetch from second line od markdown table
+    // fetch from second line od markdown table
     data = data.filter((o, i) => { return i > 1 ? true : false });
     data.forEach((o) => {
         dates.push(dateFormat(o[0], crossYear));
-        degrees.push(o[2]);
+        dates2.push(dateFormat(o[0], crossYear));
+        degrees.push(o[1]);
+        degreeDelta.push(o[2]);
     });
-    //show table
+    console.log(chartData2)
+    // show table
     printMd(record[chosen].rawData);
-    //show chart
-    Plotly.newPlot('chart', chartData, chartLayout);
-    //show statics
+    // show chart
+    Plotly.newPlot('chart', [chartData, chartData2], chartLayout);
+    // show statics
     lastIndex = data.length - 1;
     degreeRange = data[lastIndex][1] - data[0][1];
     if (data[0][0][0] + data[0][0][1] > data[lastIndex][0][0] + data[lastIndex][0][1]) rangeCrossYear = true;
@@ -89,9 +109,7 @@ function init() {
     $averageAll.innerHTML = `平均每天用了${(degreeRange / dayRange).toFixed(2)}度`;
 }
 
-/*
-page loaded
-*/
+/** page loaded */
 window.onload = function () {
     init();
     record.forEach((it, i) => {
