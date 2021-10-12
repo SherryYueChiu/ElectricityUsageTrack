@@ -5,7 +5,11 @@ var $chooseRecord = document.querySelector("#chooseRecord");
 
 var chartLayout = {
     title: '用電追蹤',
-    yaxis: { title: '每日用量（度）' },
+    yaxis: {
+        title: '每日用量（度）',
+        titlefont: { color: 'rgb(48, 119, 181)' },
+        tickfont: { color: 'rgb(48, 119, 181)' }
+    },
     yaxis2: {
         title: '電表讀數（度）',
         titlefont: { color: 'rgb(255, 127, 14)' },
@@ -19,6 +23,9 @@ var dates, degrees, data, rangeCrossYear, crossYear, prevDate, chartData = [];
 var year, monthRange, dayRange, lastIndex;
 var chosen = record.length - 1;
 
+/**
+ * @param {string} rawData 
+ */
 function printMd(rawData) {
     converter = new showdown.Converter({
         metadata: true,
@@ -39,7 +46,11 @@ function printMd(rawData) {
     $tableSec.innerHTML = html;
 }
 
-function md2arr(mdText) {
+/**
+ * @param {string} mdText
+ * @returns {{date:string, degree:string, delta:string}[]}
+ */
+let md2arr = (mdText) => {
     let lines = [],
         pattern = [];
     lines = mdText.trim().split(/[\r\n]+/);
@@ -49,8 +60,13 @@ function md2arr(mdText) {
     return pattern;
 }
 
-// mmdd to yyyy-mm-dd
-function dateFormat(date, _crossYear) {
+/**
+ * mmdd to yyyy-mm-dd
+ * @param {string} date mmdd
+ * @param {boolean} _crossYear 
+ * @returns {string} yyyy-mm-dd
+ */
+let dateFormat = (date, _crossYear) => {
     _crossYear |= crossYear;
     // cross year
     if (prevDate && `${prevDate[0]}${prevDate[1]}` > `${date[0]}${date[1]}`) {
@@ -62,41 +78,43 @@ function dateFormat(date, _crossYear) {
     return str;
 }
 
-function init() {
-    chartData = {
+let init = () => {
+    deltaData = {
         x: [],
         y: [],
         type: 'bar',
         name: '每日用量（度）'
     };
-    chartData2 = {
+    degreeData = {
         x: [],
         y: [],
         yaxis: 'y2',
         type: 'scatter',
         name: '電表讀數（度）'
     };
-    dates = chartData.x;
-    degreeDelta = chartData.y;
-    dates2 = chartData2.x;
-    degrees = chartData2.y;
     data = md2arr(record[chosen].rawData);
     year = record[chosen].startYear;
     crossYear = false;
     rangeCrossYear = false;
-    // fetch from second line od markdown table
+    let prevDate = data[0][1];
+    // fetch from second line of markdown table
     data = data.filter((o, i) => { return i > 1 ? true : false });
-    data.forEach((o) => {
-        dates.push(dateFormat(o[0], crossYear));
-        dates2.push(dateFormat(o[0], crossYear));
-        degrees.push(o[1]);
-        degreeDelta.push(o[2]);
+    data.forEach((o, i) => {
+        // date
+        let date = dateFormat(o[0], crossYear);
+        degreeData.x.push(date);
+        deltaData.x.push(date);
+        // degree
+        degreeData.y.push(o[1]);
+        // delta
+        let delta = (o[1] - (data[i - 1]?.[1] ?? o[1])) / ((new Date(date) - new Date(prevDate ?? date)) / 86400000);
+        deltaData.y.push(delta ?? 0);
+        prevDate = date;
     });
-    console.log(chartData2)
     // show table
-    printMd(record[chosen].rawData);
+    // printMd(record[chosen].rawData);
     // show chart
-    Plotly.newPlot('chart', [chartData, chartData2], chartLayout);
+    Plotly.newPlot('chart', [deltaData, degreeData], chartLayout);
     // show statics
     lastIndex = data.length - 1;
     degreeRange = data[lastIndex][1] - data[0][1];
@@ -109,7 +127,6 @@ function init() {
     $averageAll.innerHTML = `平均每天用了${(degreeRange / dayRange).toFixed(2)}度`;
 }
 
-/** page loaded */
 window.onload = function () {
     init();
     record.forEach((it, i) => {
@@ -121,5 +138,5 @@ window.onload = function () {
     });
 };
 
-//register service worker
+// register service worker
 navigator.serviceWorker.register('service-worker.js', { scope: "." });
