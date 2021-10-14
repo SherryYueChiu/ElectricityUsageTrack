@@ -7,13 +7,13 @@ var chartLayout = {
     title: '用電追蹤',
     yaxis: {
         title: '每日用量（度）',
-        titlefont: { color: 'rgb(48, 119, 181)' },
-        tickfont: { color: 'rgb(48, 119, 181)' }
+        titlefont: { color: 'rgb(174, 186, 177)' },
+        tickfont: { color: 'rgb(174, 186, 177)' },
     },
     yaxis2: {
         title: '電表讀數（度）',
-        titlefont: { color: 'rgb(255, 127, 14)' },
-        tickfont: { color: 'rgb(255, 127, 14)' },
+        titlefont: { color: 'rgb(58, 62, 59)' },
+        tickfont: { color: 'rgb(58, 62, 59)' },
         overlaying: 'y',
         side: 'right'
     }
@@ -83,14 +83,16 @@ let init = () => {
         x: [],
         y: [],
         type: 'bar',
-        name: '每日用量（度）'
+        name: '每日用量（度）',
+        marker: { color: 'rgb(174, 186, 177)' }
     };
     degreeData = {
         x: [],
         y: [],
         yaxis: 'y2',
         type: 'scatter',
-        name: '電表讀數（度）'
+        name: '電表讀數（度）',
+        line: { color: 'rgb(58, 62, 59)' }
     };
     data = md2arr(record[chosen].rawData);
     year = record[chosen].startYear;
