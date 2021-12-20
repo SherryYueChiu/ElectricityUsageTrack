@@ -1,7 +1,7 @@
 module.exports = {
     staticFileGlobs: [
         './',
-        './records/**.*',
+        './record/**.*',
         './app.js',
         './style.css',
         './index.html'
