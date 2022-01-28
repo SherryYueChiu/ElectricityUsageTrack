@@ -12,10 +12,7 @@
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
     <!--records-->
-    <script src="./record/2020_Q3Q4.js"></script>
-    <script src="./record/2021_Q1Q2.js"></script>
-    <script src="./record/2021_Q3Q4.js"></script>
-    <script src="./record/2022_Q1Q2.js"></script>
+    <script src="./record/all.js"></script>
     <!-- HTML Meta Tags -->
     <meta name="description" content="家裡用電度數一覽">
     <meta name="Author" content="玥餅" />
@@ -38,21 +35,22 @@
 </head>
 
 <body>
-    <div>
-        <select id="chooseRecord"></select>
-    </div>
     <section>
-        <h1>重點</h1>
-        <div id="clockDigit" class="summary"></div>
-        <div id="averageAll" class="summary"></div>
-    </section>
-    <section>
-        <h1>圖表</h1>
-        <div id='chart'></div>
-    </section>
-    <section>
-        <h1>詳細資料</h1>
-        <div id="tableSec"></div>
+        <h1 class="title">用電報告</h1>
+        <div class="timeScale">
+            <div class="week" onclick="selectWeekScale()">周</div>
+            <div class="month selected" onclick="selectMonthScale()">月</div>
+            <div class="season" onclick="selectSeasonScale()">季</div>
+        </div>
+        <div class="timeSelect">
+            <div class="prev" onclick="selectPrevScale()">‹</div>
+            <div class="cur" onclick="selectCurScale()">本月</div>
+            <div class="next" onclick="selectNextScale()">›</div>
+        </div>
+        <div class="info">
+            <div class="fee"></div>
+        </div>
+        <div id="chart"></div>
     </section>
     <script src="./app.js"></script>
 </body>

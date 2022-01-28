@@ -1,3 +1,8 @@
+h1.title {
+    text-align: center;
+    padding: 0rem 0rem 3rem 0rem;
+}
+
 section {
     margin: 2em;
 }
@@ -32,19 +37,73 @@ table {
     }
 }
 
-#chooseRecord{
+#chooseRecord {
     position: fixed;
     right: 0;
     top: 0;
     width: 10rem;
     height: 3rem;
-    padding: .5rem;
+    padding: 0.5rem;
     margin: 2rem;
     background: black;
     color: aliceblue;
-    border-radius: .5em;
+    border-radius: 0.5em;
     font-size: 1rem;
     opacity: 0.5;
     z-index: 3;
     outline: none;
+}
+
+.timeScale {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 4rem;
+    font-size: 1.5em;
+    & > div {
+        flex: 1;
+        text-align: center;
+        color: gray;
+        padding-top: 1rem;
+        &.selected {
+            background-color: gray;
+            color: aliceblue;
+            border-radius: 1rem;
+        }
+    }
+}
+
+.timeSelect {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 4rem;
+    font-size: 1.5em;
+    & > .prev {
+        flex: 1;
+        text-align: center;
+        color: gray;
+        padding-top: 1rem;
+    }
+    & > .cur {
+        flex: 4;
+        text-align: center;
+        color: gray;
+        padding-top: 1rem;
+    }
+    & > .next {
+        flex: 1;
+        text-align: center;
+        color: gray;
+        padding-top: 1rem;
+    }
+}
+
+.info {
+    padding: 1rem 0rem 0rem 0rem;
+    text-align: center;
+    white-space: pre-line;
+    & > * {
+        font-size: 1.5em;
+    }
 }
