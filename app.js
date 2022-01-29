@@ -20,7 +20,12 @@ var chartLayout = {
 };
 
 var fullData, chartData = [];
-var viewScale = 'month', viewFrom, viewUntil;
+/** @type {string} 'week'|'month'|'season' */
+var viewScale = 'month';
+/** @type {Date} */
+var viewFrom;
+/** @type {Date} */
+var viewUntil;
 
 /**
  * @param {string} mdText
@@ -104,14 +109,14 @@ let selectPrevScale = () => {
     viewUntil = viewFrom;
     viewUntil = viewUntil.setDate(viewFrom.getDate() - 1);
     viewUntil = new Date(viewUntil);
-    if (viewScale == 'week') viewFrom = viewFrom.setDate(viewUntil.getDate() - 7);
-    if (viewScale == 'month') viewFrom = viewFrom.setMonth(viewUntil.getMonth() - 1);
-    if (viewScale == 'season') viewFrom = viewFrom.setMonth(viewUntil.getMonth() - 3);
+    if (viewScale === 'week') viewFrom = viewFrom.setDate(viewUntil.getDate() - 7);
+    if (viewScale === 'month') viewFrom = viewFrom.setMonth(viewUntil.getMonth() - 1);
+    if (viewScale === 'season') viewFrom = viewFrom.setMonth(viewUntil.getMonth() - 3);
     if (new Date(viewFrom) < new Date(dateFormat(fullData[0].date))) {
         viewFrom = new Date(dateFormat(fullData[0].date));
-        if (viewScale == 'week') viewUntil = viewUntil.setDate(viewFrom.getDate() + 7);
-        if (viewScale == 'month') viewUntil = viewUntil.setMonth(viewFrom.getMonth() + 1);
-        if (viewScale == 'season') viewUntil = viewUntil.setMonth(viewFrom.getMonth() + 3);
+        if (viewScale === 'week') viewUntil = viewUntil.setDate(viewFrom.getDate() + 7);
+        if (viewScale === 'month') viewUntil = viewUntil.setMonth(viewFrom.getMonth() + 1);
+        if (viewScale === 'season') viewUntil = viewUntil.setMonth(viewFrom.getMonth() + 3);
         viewFrom = new Date(viewFrom);
         viewUntil = new Date(viewUntil);
         search(viewFrom, viewUntil);
@@ -125,7 +130,7 @@ let selectPrevScale = () => {
     if (viewScale == 'week' || viewScale == 'month') {
         let center = new Date(viewFrom.getTime() + (viewUntil.getTime() - viewFrom.getTime()) / 2);
         label = `${center.getFullYear()}年 ${center.getMonth() + 1}月`;
-    } else if (viewScale == 'season') {
+    } else if (viewScale === 'season') {
         let center = new Date(viewFrom.getTime() + (viewUntil.getTime() - viewFrom.getTime()) / 2);
         label = `${center.getFullYear()}年`;
     }
@@ -135,19 +140,16 @@ let selectPrevScale = () => {
 let selectCurScale = () => {
     viewFrom = new Date();
     viewUntil = new Date();
-    viewUntil = viewUntil.setDate(viewUntil.getDate() - 1);
-    viewUntil = new Date(viewUntil);
-    if (viewScale == 'week') viewFrom = viewFrom.setDate(viewFrom.getDate() - 7);
-    if (viewScale == 'month') viewFrom = viewFrom.setMonth(viewFrom.getMonth() - 1);
-    if (viewScale == 'season') viewFrom = viewFrom.setMonth(viewFrom.getMonth() - 3);
+    if (viewScale === 'week') viewFrom = viewFrom.setDate(viewFrom.getDate() - 7);
+    if (viewScale === 'month') viewFrom = viewFrom.setMonth(viewFrom.getMonth() - 1);
+    if (viewScale === 'season') viewFrom = viewFrom.setMonth(viewFrom.getMonth() - 3);
     viewFrom = new Date(viewFrom);
-    viewUntil = new Date(viewUntil);
     search(viewFrom, viewUntil);
 
     let label = '';
-    if (viewScale == 'week') label = '本週';
-    if (viewScale == 'month') label = '本月';
-    if (viewScale == 'season') label = '本季';
+    if (viewScale === 'week') label = '本週';
+    if (viewScale === 'month') label = '本月';
+    if (viewScale === 'season') label = '本季';
     document.querySelector('.timeSelect>.cur').textContent = label;
 }
 
@@ -184,6 +186,8 @@ let selectNextScale = () => {
 }
 
 let search = (beginDate, endData) => {
+    beginDate.setHours(8, 0, 0);
+    endData.setHours(8, 0, 0);
     console.log('search range', beginDate, endData)
     deltaData = {
         x: [],
@@ -204,6 +208,10 @@ let search = (beginDate, endData) => {
     if (!beginDate || !endData) {
         viewFrom = beginDate = new Date(dateFormat(fullData[0].date));
         viewUntil = endData = new Date(dateFormat(fullData[fullData.length - 1].date));
+        beginDate.setHours(8, 0, 0);
+        endData.setHours(8, 0, 0);
+        viewFrom = beginDate;
+        viewUntil = endData;
     }
     let filterData = fullData.filter(data => new Date(dateFormat(data.date)) >= beginDate && new Date(dateFormat(data.date)) <= endData);
 
