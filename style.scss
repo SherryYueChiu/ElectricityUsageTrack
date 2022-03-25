@@ -65,6 +65,7 @@ table {
         text-align: center;
         color: gray;
         padding-top: 1rem;
+        cursor: pointer;
         &.selected {
             background-color: gray;
             color: aliceblue;
@@ -84,18 +85,21 @@ table {
         text-align: center;
         color: gray;
         padding-top: 1rem;
+        cursor: pointer;
     }
     & > .cur {
         flex: 4;
         text-align: center;
         color: gray;
         padding-top: 1rem;
+        cursor: pointer;
     }
     & > .next {
         flex: 1;
         text-align: center;
         color: gray;
         padding-top: 1rem;
+        cursor: pointer;
     }
 }
 

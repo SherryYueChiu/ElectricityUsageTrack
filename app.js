@@ -42,23 +42,10 @@ let md2arr = (mdText) => {
         });
 }
 
-/**
- * mmdd to yyyy-mm-dd
- * @param {string} date yyyymmdd
- * @returns {string} yyyy-mm-dd
- */
-let dateFormat = (date) => {
-    return date.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
-}
-
 let selectWeekScale = () => {
     viewScale = 'week';
-    let today = new Date();
-    let fromDate = new Date();
-    fromDate = fromDate.setDate(fromDate.getDate() - 7);
-    fromDate = new Date(fromDate);
-    viewUntil = new Date(`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`);
-    viewFrom = new Date(`${fromDate.getFullYear()}-${fromDate.getMonth() + 1}-${fromDate.getDate()}`);
+    viewFrom = moment().startOf('week');
+    viewUntil = moment().endOf('week');
     search(viewFrom, viewUntil);
     document.querySelectorAll('.timeScale>*').forEach(elm => {
         elm.classList.remove('selected');
@@ -71,12 +58,8 @@ let selectWeekScale = () => {
 
 let selectMonthScale = () => {
     viewScale = 'month';
-    let today = new Date();
-    let fromDate = new Date();
-    fromDate = fromDate.setMonth(fromDate.getMonth() - 1);
-    fromDate = new Date(fromDate);
-    viewUntil = new Date(`${today.getFullYear()}/${today.getMonth() + 1}/${today.getDate()}`);
-    viewFrom = new Date(`${fromDate.getFullYear()}/${fromDate.getMonth() + 1}/${fromDate.getDate()}`);
+    viewFrom = moment().startOf('month');
+    viewUntil = moment().endOf('month');
     search(viewFrom, viewUntil);
     document.querySelectorAll('.timeScale>*').forEach(elm => {
         elm.classList.remove('selected');
@@ -89,12 +72,8 @@ let selectMonthScale = () => {
 
 let selectSeasonScale = () => {
     viewScale = 'season';
-    let today = new Date();
-    let fromDate = new Date();
-    fromDate = fromDate.setMonth(fromDate.getMonth() - 3);
-    fromDate = new Date(fromDate);
-    viewUntil = new Date(`${today.getFullYear()}-/${today.getMonth() + 1}/${today.getDate()}`);
-    viewFrom = new Date(`${fromDate.getFullYear()}/${fromDate.getMonth() + 1}/${fromDate.getDate()}`);
+    viewFrom = moment().startOf('quarter');
+    viewUntil = moment().endOf('quarter');
     search(viewFrom, viewUntil);
     document.querySelectorAll('.timeScale>*').forEach(elm => {
         elm.classList.remove('selected');
@@ -106,44 +85,42 @@ let selectSeasonScale = () => {
 }
 
 let selectPrevScale = () => {
-    viewUntil = viewFrom;
-    viewUntil = viewUntil.setDate(viewFrom.getDate() - 1);
-    viewUntil = new Date(viewUntil);
-    if (viewScale === 'week') viewFrom = viewFrom.setDate(viewUntil.getDate() - 7);
-    if (viewScale === 'month') viewFrom = viewFrom.setMonth(viewUntil.getMonth() - 1);
-    if (viewScale === 'season') viewFrom = viewFrom.setMonth(viewUntil.getMonth() - 3);
-    if (new Date(viewFrom) < new Date(dateFormat(fullData[0].date))) {
-        viewFrom = new Date(dateFormat(fullData[0].date));
-        if (viewScale === 'week') viewUntil = viewUntil.setDate(viewFrom.getDate() + 7);
-        if (viewScale === 'month') viewUntil = viewUntil.setMonth(viewFrom.getMonth() + 1);
-        if (viewScale === 'season') viewUntil = viewUntil.setMonth(viewFrom.getMonth() + 3);
-        viewFrom = new Date(viewFrom);
-        viewUntil = new Date(viewUntil);
-        search(viewFrom, viewUntil);
-        return;
+    if (viewScale === 'week') {
+        viewUntil = moment(viewUntil).subtract(1, 'w').endOf('week');
+        viewFrom = moment(viewUntil).startOf('week');
+    } else if (viewScale === 'month') {
+        viewUntil = moment(viewUntil).subtract(1, 'M').endOf('month');
+        viewFrom = moment(viewUntil).startOf('month');
+    } else if (viewScale === 'season') {
+        viewUntil = moment(viewUntil).subtract(1, 'Q').endOf('quarter');
+        viewFrom = moment(viewUntil).startOf('quarter');
     }
-    viewFrom = new Date(viewFrom);
-    viewUntil = new Date(viewUntil);
     search(viewFrom, viewUntil);
 
     let label = '';
     if (viewScale == 'week' || viewScale == 'month') {
-        let center = new Date(viewFrom.getTime() + (viewUntil.getTime() - viewFrom.getTime()) / 2);
-        label = `${center.getFullYear()}年 ${center.getMonth() + 1}月`;
+        let center = moment(viewFrom).add(viewUntil.diff(viewFrom, 'days'), 'days');
+        label = `${center.format('YYYY')}年 ${center.format('MM')}月`;
     } else if (viewScale === 'season') {
-        let center = new Date(viewFrom.getTime() + (viewUntil.getTime() - viewFrom.getTime()) / 2);
-        label = `${center.getFullYear()}年`;
+        let center = moment(viewFrom).add(viewUntil.diff(viewFrom, 'days'), 'days');
+        label = `${center.format('YYYY')}年`;
     }
     document.querySelector('.timeSelect>.cur').textContent = label;
 }
 
 let selectCurScale = () => {
-    viewFrom = new Date();
-    viewUntil = new Date();
-    if (viewScale === 'week') viewFrom = viewFrom.setDate(viewFrom.getDate() - 7);
-    if (viewScale === 'month') viewFrom = viewFrom.setMonth(viewFrom.getMonth() - 1);
-    if (viewScale === 'season') viewFrom = viewFrom.setMonth(viewFrom.getMonth() - 3);
-    viewFrom = new Date(viewFrom);
+    viewFrom = moment().startOf('days');
+    viewUntil = moment().endOf('days');
+    if (viewScale === 'week') {
+        viewFrom = moment(viewFrom).startOf('week');
+        viewUntil = moment(viewUntil).endOf('week');
+    } else if (viewScale === 'month') {
+        viewFrom = moment(viewFrom).startOf('month');
+        viewUntil = moment(viewUntil).endOf('month');
+    } else if (viewScale === 'season') {
+        viewFrom = moment(viewFrom).startOf('quarter');
+        viewUntil = moment(viewUntil).endOf('quarter');
+    }
     search(viewFrom, viewUntil);
 
     let label = '';
@@ -154,41 +131,31 @@ let selectCurScale = () => {
 }
 
 let selectNextScale = () => {
-    viewFrom = viewUntil;
-    viewFrom = viewFrom.setDate(viewUntil.getDate() + 1);
-    viewFrom = new Date(viewFrom);
-    if (viewScale == 'week') viewUntil = viewUntil.setDate(viewFrom.getDate() + 7);
-    if (viewScale == 'month') viewUntil = viewUntil.setMonth(viewFrom.getMonth() + 1);
-    if (viewScale == 'season') viewUntil = viewUntil.setMonth(viewFrom.getMonth() + 3);
-    if (new Date(viewUntil) > new Date()) {
-        viewUntil = new Date();
-        if (viewScale == 'week') viewFrom = viewFrom.setDate(viewUntil.getDate() - 7);
-        if (viewScale == 'month') viewFrom = viewFrom.setMonth(viewUntil.getMonth() - 1);
-        if (viewScale == 'season') viewFrom = viewFrom.setMonth(viewUntil.getMonth() - 3);
-        viewFrom = new Date(viewFrom);
-        viewUntil = new Date(viewUntil);
-        search(viewFrom, viewUntil);
-        return;
+    if (viewScale === 'week') {
+        viewFrom = moment(viewFrom).add(1, 'w').startOf('week');
+        viewUntil = moment(viewFrom).endOf('week');
+    } else if (viewScale == 'month') {
+        viewFrom = moment(viewFrom).add(1, 'M').startOf('month');
+        viewUntil = moment(viewFrom).endOf('month');
+    } else if (viewScale == 'season') {
+        viewFrom = moment(viewFrom).add(1, 'Q').startOf('quarter');
+        viewUntil = moment(viewFrom).endOf('quarter');
     }
-    viewFrom = new Date(viewFrom);
-    viewUntil = new Date(viewUntil);
     search(viewFrom, viewUntil);
 
     let label = '';
     if (viewScale == 'week' || viewScale == 'month') {
-        let center = new Date(viewFrom.getTime() + (viewUntil.getTime() - viewFrom.getTime()) / 2);
-        label = `${center.getFullYear()}年 ${center.getMonth() + 1}月`;
+        let center = moment(viewFrom).add(viewUntil.diff(viewFrom, 'days'), 'days');
+        label = `${center.format('YYYY')}年 ${center.format('MM')}月`;
     } else if (viewScale == 'season') {
-        let center = new Date(viewFrom.getTime() + (viewUntil.getTime() - viewFrom.getTime()) / 2);
-        label = `${center.getFullYear()}年`;
+        let center = moment(viewFrom).add(viewUntil.diff(viewFrom, 'days'), 'days');
+        label = `${center.format('YYYY')}年`;
     }
     document.querySelector('.timeSelect>.cur').textContent = label;
 }
 
 let search = (beginDate, endData) => {
-    beginDate.setHours(8, 0, 0);
-    endData.setHours(8, 0, 0);
-    console.log('search range', beginDate, endData)
+    console.log('search range', beginDate.format('YYYY-MM-DD'), endData.format('YYYY-MM-DD'));
     deltaData = {
         x: [],
         y: [],
@@ -206,32 +173,33 @@ let search = (beginDate, endData) => {
     };
     fullData = md2arr(record);
     if (!beginDate || !endData) {
-        viewFrom = beginDate = new Date(dateFormat(fullData[0].date));
-        viewUntil = endData = new Date(dateFormat(fullData[fullData.length - 1].date));
-        beginDate.setHours(8, 0, 0);
-        endData.setHours(8, 0, 0);
-        viewFrom = beginDate;
-        viewUntil = endData;
+        viewFrom = beginDate = moment(fullData[0].date, 'YYYYMMDD').startOf('days');
+        viewUntil = endData = moment(fullData[fullData.length - 1].date, 'YYYYMMDD').startOf('days');
     }
-    let filterData = fullData.filter(data => new Date(dateFormat(data.date)) >= beginDate && new Date(dateFormat(data.date)) <= endData);
+    let filterData = fullData.filter(data => (
+        moment(data.date, 'YYYYMMDD').isSameOrAfter(beginDate) &&
+        moment(data.date, 'YYYYMMDD').isSameOrBefore(endData)
+    ));
 
-    let prevDate = filterData[0].degree;
-    filterData.forEach((o, i) => {
+    filterData.forEach((data, idx, arr) => {
         // date
-        let date = dateFormat(o.date);
-        degreeData.x.push(date);
-        deltaData.x.push(date);
+        let date = moment(data.date, 'YYYYMMDD');
+        degreeData.x.push(date.format('YYYY-MM-DD'));
+        deltaData.x.push(date.format('YYYY-MM-DD'));
         // degree
-        degreeData.y.push(o.degree);
+        degreeData.y.push(data.degree);
         // delta
-        let delta = (o.degree - (filterData[i - 1]?.degree ?? o.degree)) / ((new Date(date) - new Date(prevDate ?? date)) / 86400000);
+        let delta = (data.degree - (arr[idx - 1]?.degree ?? data.degree)) / date.diff(moment(arr[idx - 1]?.date ?? date, 'YYYYMMDD'), 'days');
         deltaData.y.push(delta ?? 0);
-        prevDate = date;
     });
     // show chart
     Plotly.newPlot('chart', [deltaData, degreeData], chartLayout);
-    let fee = (filterData[filterData.length - 1].degree - filterData[0].degree) * 4.5;
-    document.querySelector('.info>.fee').textContent = `電費\n$${fee}`;
+    if (filterData.length > 0) {
+        let fee = (filterData[filterData.length - 1].degree - filterData[0].degree) * 4.5;
+        document.querySelector('.info>.fee').textContent = `電費\n$${fee}`;
+    } else {
+        document.querySelector('.info>.fee').textContent = `電費\n$--`;
+    }
 }
 
 window.onload = function () {

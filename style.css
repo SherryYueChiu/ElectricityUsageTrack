@@ -74,6 +74,7 @@ table td {
   text-align: center;
   color: gray;
   padding-top: 1rem;
+  cursor: pointer;
 }
 
 .timeScale > div.selected {
@@ -100,6 +101,7 @@ table td {
   text-align: center;
   color: gray;
   padding-top: 1rem;
+  cursor: pointer;
 }
 
 .timeSelect > .cur {
@@ -109,6 +111,7 @@ table td {
   text-align: center;
   color: gray;
   padding-top: 1rem;
+  cursor: pointer;
 }
 
 .timeSelect > .next {
@@ -118,6 +121,7 @@ table td {
   text-align: center;
   color: gray;
   padding-top: 1rem;
+  cursor: pointer;
 }
 
 .info {
