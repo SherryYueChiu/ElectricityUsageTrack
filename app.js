@@ -100,10 +100,10 @@ let selectPrevScale = () => {
     let label = '';
     if (viewScale == 'week' || viewScale == 'month') {
         let center = moment(viewFrom).add(viewUntil.diff(viewFrom, 'days'), 'days');
-        label = `${center.format('YYYY')}年 ${center.format('MM')}月`;
+        label = `${center.year()}年 ${center.month() + 1}月`;
     } else if (viewScale === 'season') {
         let center = moment(viewFrom).add(viewUntil.diff(viewFrom, 'days'), 'days');
-        label = `${center.format('YYYY')}年`;
+        label = `${center.year()}年`;
     }
     document.querySelector('.timeSelect>.cur').textContent = label;
 }
@@ -146,10 +146,10 @@ let selectNextScale = () => {
     let label = '';
     if (viewScale == 'week' || viewScale == 'month') {
         let center = moment(viewFrom).add(viewUntil.diff(viewFrom, 'days'), 'days');
-        label = `${center.format('YYYY')}年 ${center.format('MM')}月`;
+        label = `${center.year()}年 ${center.month() + 1}月`;
     } else if (viewScale == 'season') {
         let center = moment(viewFrom).add(viewUntil.diff(viewFrom, 'days'), 'days');
-        label = `${center.format('YYYY')}年`;
+        label = `${center.year()}年`;
     }
     document.querySelector('.timeSelect>.cur').textContent = label;
 }
