@@ -1,8 +1,3 @@
-var $tableSec = document.querySelector("#tableSec");
-var $averageAll = document.querySelector("#averageAll");
-var $clockDigit = document.querySelector("#clockDigit");
-var $chooseRecord = document.querySelector("#chooseRecord");
-
 var chartLayout = {
     title: '',
     yaxis: {
