@@ -1,3 +1,18 @@
+@font-face {
+  font-family: Iansui;
+  src: url(./Iansui0.91-Regular.ttf);
+}
+
+body {
+  background-color: white;
+  color: black;
+  font-family: Iansui;
+}
+
+* {
+  font-family: Iansui;
+}
+
 h1.title {
   text-align: center;
   padding: 0rem 0rem 3rem 0rem;
