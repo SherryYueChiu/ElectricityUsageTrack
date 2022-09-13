@@ -190,10 +190,32 @@ let search = (beginDate, endData) => {
     // show chart
     Plotly.newPlot('chart', [deltaData, degreeData], chartLayout);
     if (filterData.length > 0) {
-        let fee = (filterData[filterData.length - 1].degree - filterData[0].degree) * 4.5;
-        document.querySelector('.info>.fee').textContent = `電費\n$${fee}`;
+        // 6月之前
+        if (moment(filterData[filterData.length - 1].date).month() + 1 < 6) {
+            let fee = (filterData[filterData.length - 1].degree - filterData[0].degree) * 5;
+            document.querySelector('.info>.fee').textContent = `電費\n約$${fee}`;
+        }
+        // 10月之後
+        else if (moment(filterData[0].date).month() + 1 > 10) {
+            let fee = (filterData[filterData.length - 1].degree - filterData[0].degree) * 5;
+            document.querySelector('.info>.fee').textContent = `電費\n約$${fee}`;
+        }
+        // 6月～9月
+        else if (
+            moment(filterData[0].date).month() + 1 >= 6 &&
+            moment(filterData[filterData.length - 1].date).month() + 1 <= 9
+        ) {
+            let fee = (filterData[filterData.length - 1].degree - filterData[0].degree) * 6;
+            document.querySelector('.info>.fee').textContent = `電費\n約$${fee}`;
+        }
+        // 混合
+        else {
+            let feeFrom = (filterData[filterData.length - 1].degree - filterData[0].degree) * 5;
+            let feeTo = (filterData[filterData.length - 1].degree - filterData[0].degree) * 6;
+            document.querySelector('.info>.fee').textContent = `電費\n$${feeFrom}~${feeTo}`;
+        }
     } else {
-        document.querySelector('.info>.fee').textContent = `電費\n$--`;
+        document.querySelector('.info>.fee').textContent = `電費\n約$--`;
     }
 }
 
